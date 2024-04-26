@@ -18,7 +18,7 @@ $centrosmedicos = array(
 //convertir a formato json (parsear)
  $json_response = json_encode($centrosmedicos);
 
-header('CONTENT-TYPE: application/json');
+header('Content-Type: application/json');
 
 echo $json_response
 ?>
