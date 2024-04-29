@@ -11,12 +11,14 @@ class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
+    protected $token;
+
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    public function __construct($token)
     {
-        //
+        $this->token = $token;
     }
 
     /**
@@ -33,10 +35,13 @@ class ResetPasswordNotification extends Notification
      * Get the mail representation of the notification.
      */
     public function toMail(object $notifiable): MailMessage
-    {
+    { //recuperar contraseña
+        $resetUrl = url('/reset-password', ['token' => $this->token]);
+
         return (new MailMessage)
+                    ->subject('Password reset request')
                     ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
+                    ->action('Notification Action', $resetUrl)
                     ->line('Thank you for using our application!');
     }
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('codigo')->unique();
             $table->unsignedBigInteger('fk_paciente');
-            $table->foreign('fk_paciente')->references('id')->on('pacientes')->onDelete('cascade');
+            //$table->foreign('fk_paciente')->references('id')->on('patients')->onDelete('cascade');
             $table->unsignedBigInteger('fk_medico')->nullable();
             $table->foreign('fk_medico')->references('id')->on('medicos')->onDelete('set null');
             $table->decimal('precio_total', 8, 2)->default(0);

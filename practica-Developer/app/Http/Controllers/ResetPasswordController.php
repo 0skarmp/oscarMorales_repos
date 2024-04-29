@@ -1,10 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Auth;
 
+
+use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Mail\Message;
+use Illuminate\Http\RedirectResponse; // Agrega esta línea
 
 class ResetPasswordController extends Controller
 {
@@ -15,11 +19,13 @@ class ResetPasswordController extends Controller
     }
 
     // Método para enviar el correo electrónico con el enlace de restablecimiento de contraseña
-    public function sendResetLinkEmail(Request $request)
+    public function sendResetLinkEmail(Request $request): RedirectResponse|array // Añade RedirectResponse|array como tipo de retorno
     {
         $request->validate(['email' => 'required|email']);
 
-        $status = Password::sendResetLink($request->only('email'));
+        $status = Password::sendResetLink($request->only('email'), function ($message) {
+            $message->sender('your_email@example.com');
+        });
 
         return $status === Password::RESET_LINK_SENT
                     ? back()->with('status', __($status))
@@ -49,19 +55,5 @@ class ResetPasswordController extends Controller
         return $status == Password::PASSWORD_RESET
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withErrors(['email' => [__($status)]]);
-    }
-
-    // metod para recuperar contraseña por email 
-public function sendResetLinkEmail(Request $request)
-{
-    $request->validate(['email' => 'required|email']);
-
-    $status = Password::sendResetLink($request->only('email'));
-
-    return $status === Password::RESET_LINK_SENT
-                ? back()->with('status', __($status))
-                : back()->withErrors(['email' => __($status)]);
+    }  
 }
-
-}
-
